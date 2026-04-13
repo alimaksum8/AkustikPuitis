@@ -144,13 +144,15 @@ const App = () => {
     
     PANDUAN KHUSUS PRODUKSI:
     - LIRIK: Harus puitis, menggunakan metafora yang kuat, dan memiliki struktur lagu yang jelas (Intro, Verse, Chorus, Bridge, Outro).
-    - CHORD: Gunakan chord akustik yang kaya (misal: open chords, suspended, add9).
-    - ARRANGEMENT: Berikan catatan teknis untuk setiap bagian (misal: "Gunakan palm muting pada Verse 1 untuk membangun dinamika").
-    - MIXING/MASTERING: Berikan panduan teknis untuk sound engineer (EQ, Compression, Reverb settings spesifik untuk instrumen terpilih).
+    - INSTRUKSI TEKNIS LIRIK: SETIAP TAG struktur (misal: [Intro], [Verse 1], [Chorus]) WAJIB diikuti instruksi teknis dalam kurung di baris yang sama. 
+      Contoh: [Intro] (Tempo: 65 BPM, Travis Picking, Low Intensity).
+    - CHORD: Cantumkan chord di atas baris lirik yang relevan.
+    - ARRANGEMENT: Berikan catatan teknis untuk setiap bagian di field arrangement_notes.
+    - MIXING/MASTERING: Berikan panduan teknis untuk sound engineer di field mixing_mastering_guide.
     - TEMPO: Harus spesifik dalam rentang ${tempo} BPM.
 
     PROTEKSI HAK CIPTA (PENTING):
-    - Jika Deskripsi Cerita terdeteksi mengandung referensi, judul, atau lirik dari karya yang memiliki hak cipta, Anda WAJIB mengubah minimal 1 kata kunci di setiap baris lirik agar menjadi karya orisinal yang baru.`;
+    - Jika Deskripsi Cerita terdeteksi mengandung referensi karya berhak cipta, Anda WAJIB mengubah minimal 1 kata kunci di setiap baris lirik agar menjadi karya orisinal yang baru.`;
 
     const userQuery = `
       PRODUKSI REQUEST:
@@ -438,10 +440,20 @@ const App = () => {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.1 }}
-                            className="relative"
+                            className="relative group/section"
                           >
-                            <pre className="whitespace-pre-wrap font-serif text-xl text-white/90 leading-[2.4] italic">
-                              {section}
+                            <pre className="whitespace-pre-wrap font-serif text-xl text-white/90 leading-[2.4]">
+                              {section.split('\n').map((line, lIdx) => {
+                                const isTag = line.trim().startsWith('[');
+                                if (isTag) {
+                                  return (
+                                    <div key={lIdx} className="text-purple-400 font-sans text-sm font-black uppercase tracking-[0.2em] mb-4 mt-2 bg-purple-500/10 inline-block px-3 py-1 rounded-md border border-purple-500/20">
+                                      {line}
+                                    </div>
+                                  );
+                                }
+                                return <div key={lIdx} className="italic">{line}</div>;
+                              })}
                             </pre>
                           </motion.div>
                         ))}
