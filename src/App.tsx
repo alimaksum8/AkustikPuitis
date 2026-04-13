@@ -146,7 +146,8 @@ const App = () => {
     - LIRIK: Harus puitis, menggunakan metafora yang kuat, dan memiliki struktur lagu yang jelas (Intro, Verse, Chorus, Bridge, Outro).
     - INSTRUKSI TEKNIS LIRIK: SETIAP TAG struktur (misal: [Intro], [Verse 1], [Chorus]) WAJIB diikuti instruksi teknis dalam kurung di baris yang sama. 
       Contoh: [Intro] (Tempo: 65 BPM, Travis Picking, Low Intensity).
-    - CHORD: Cantumkan chord di atas baris lirik yang relevan.
+    - INSTRUKSI CHORD & EKSPRESI: Setiap baris lirik WAJIB mencantumkan chord di dalam kurung di awal baris, dan instruksi ekspresi di dalam kurung di akhir baris. 
+      Contoh: "(Gadd9) Malam mulai mendingin (vokal berbisik, lembut)".
     - ARRANGEMENT: Berikan catatan teknis untuk setiap bagian di field arrangement_notes.
     - MIXING/MASTERING: Berikan panduan teknis untuk sound engineer di field mixing_mastering_guide.
     - TEMPO: Harus spesifik dalam rentang ${tempo} BPM.
@@ -452,7 +453,24 @@ const App = () => {
                                     </div>
                                   );
                                 }
-                                return <div key={lIdx} className="italic">{line}</div>;
+                                return (
+                                  <div key={lIdx} className="italic flex flex-wrap items-baseline">
+                                    {line.split(/(\(.*?\))/g).map((part, pIdx) => {
+                                      if (part.startsWith('(') && part.endsWith(')')) {
+                                        const isAtStart = pIdx <= 1 && line.trim().startsWith('(');
+                                        return (
+                                          <span 
+                                            key={pIdx} 
+                                            className={`text-purple-400/60 text-sm font-sans not-italic ${isAtStart ? 'mr-3 font-black' : 'ml-3 opacity-50'}`}
+                                          >
+                                            {part}
+                                          </span>
+                                        );
+                                      }
+                                      return <span key={pIdx}>{part}</span>;
+                                    })}
+                                  </div>
+                                );
                               })}
                             </pre>
                           </motion.div>
