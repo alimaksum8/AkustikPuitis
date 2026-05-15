@@ -46,6 +46,8 @@ const App = () => {
   const [vocalStyle, setVocalStyle] = useState<string[]>([]);
   const [vocalEffect, setVocalEffect] = useState<string[]>([]);
   const [tempo, setTempo] = useState('60-80');
+  const [duration, setDuration] = useState(4);
+  const [isOriginal, setIsOriginal] = useState(false);
   const [result, setResult] = useState<SongResult | null>(null);
   const [history, setHistory] = useState<SongResult[]>(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('akustik_history') : null;
@@ -94,7 +96,8 @@ const App = () => {
       'Warm Compression', 'Hall Reverb', 'Vintage Tube Saturation', 'Lo-fi Filter', 
       'Parallel Compression', 'De-esser Natural', 'Soft Doubling'
     ],
-    tempos: ['40-60', '60-80', '80-100', '100-120', '120-140']
+    tempos: ['40-60', '60-80', '80-100', '100-120', '120-140'],
+    durations: [4, 5, 6, 7, 8]
   };
 
   const toggleMultiSelect = (item: string, state: string[], setState: React.Dispatch<React.SetStateAction<string[]>>) => {
@@ -144,6 +147,7 @@ const App = () => {
     
     PANDUAN KHUSUS PRODUKSI:
     - LIRIK: Harus puitis, menggunakan metafora yang kuat, dan memiliki struktur lagu yang jelas (Intro, Verse, Chorus, Bridge, Outro).
+    - DURASI: Pastikan panjang lagu dan jumlah baris lirik sesuai dengan target durasi ${duration} menit yang diminta.
     - INSTRUKSI TEKNIS LIRIK: SETIAP TAG struktur (misal: [Intro], [Verse 1], [Chorus]) WAJIB diikuti instruksi teknis dalam kurung di baris yang sama. 
       Contoh: [Intro] (Tempo: 65 BPM, Travis Picking, Low Intensity).
     - INSTRUKSI CHORD & EKSPRESI: Setiap baris lirik WAJIB mencantumkan chord di dalam kurung di awal baris, dan instruksi ekspresi di dalam kurung di akhir baris. 
@@ -152,8 +156,10 @@ const App = () => {
     - MIXING/MASTERING: Berikan panduan teknis untuk sound engineer di field mixing_mastering_guide.
     - TEMPO: Harus spesifik dalam rentang ${tempo} BPM.
 
-    PROTEKSI HAK CIPTA (PENTING):
-    - Jika Deskripsi Cerita terdeteksi mengandung referensi karya berhak cipta, Anda WAJIB mengubah minimal 1 kata kunci di setiap baris lirik agar menjadi karya orisinal yang baru.`;
+    ${isOriginal ? 
+      `MODE ORIGINAL AKTIF: Fokus utama adalah mempertahankan SETIAP KATA dari deskripsi user jika itu berupa lirik. Jangan mengubah metafora atau pilihan kata asli user.` : 
+      `PROTEKSI HAK CIPTA (PENTING):
+      - Jika Deskripsi Cerita terdeteksi mengandung referensi karya berhak cipta, Anda WAJIB mengubah minimal 1 kata kunci di setiap baris lirik agar menjadi karya orisinal yang baru.`};`;
 
     const userQuery = `
       PRODUKSI REQUEST:
@@ -168,6 +174,7 @@ const App = () => {
       Vokal: ${vocalStyle.join(', ')}
       FX Vokal: ${vocalEffect.join(', ')}
       Tempo: ${tempo} BPM
+      Target Durasi: ${duration} Menit
     `;
 
     try {
@@ -209,7 +216,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-purple-50 font-sans selection:bg-purple-500/30">
+    <div className="min-h-screen bg-[#050a18] text-purple-50 font-sans selection:bg-purple-500/30">
       {/* Background Atmosphere */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-900/20 blur-[120px] rounded-full animate-pulse" />
@@ -266,7 +273,7 @@ const App = () => {
             animate={{ x: 0, opacity: 1 }}
             className="xl:col-span-6 space-y-8"
           >
-            <div className="bg-[#0c0c0e] p-8 md:p-10 rounded-[3rem] border border-white/5 shadow-2xl backdrop-blur-md relative overflow-hidden group">
+            <div className="bg-[#0f172a]/80 p-8 md:p-10 rounded-[3rem] border border-white/5 shadow-2xl backdrop-blur-md relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
               
               <div className="flex items-center gap-4 mb-10">
@@ -279,11 +286,19 @@ const App = () => {
               <div className="space-y-10">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <label className="text-[11pt] uppercase font-black text-purple-500 tracking-[0.2em]">Cerita & Deskripsi</label>
+                    <div className="flex items-center gap-3">
+                      <button 
+                        onClick={() => setIsOriginal(!isOriginal)}
+                        className={`text-[9px] uppercase font-black px-2 py-1 rounded-md border transition-all ${isOriginal ? 'bg-purple-600 border-purple-400 text-white shadow-lg shadow-purple-900/40' : 'bg-white/5 border-white/10 text-white/20 hover:text-white/40'}`}
+                      >
+                        Original
+                      </button>
+                      <label className="text-[11pt] uppercase font-black text-purple-500 tracking-[0.2em]">Cerita & Deskripsi</label>
+                    </div>
                     <Info size={12} className="text-white/20" />
                   </div>
                   <textarea 
-                    className="w-full p-6 bg-black/40 border border-white/5 rounded-3xl focus:border-purple-500/50 focus:ring-4 focus:ring-purple-500/5 outline-none transition-all h-40 text-purple-100 placeholder:text-white/10 text-[11pt] leading-relaxed resize-none"
+                    className="w-full p-6 bg-gray-200 border border-white/5 rounded-3xl focus:border-purple-500/50 focus:ring-4 focus:ring-purple-500/5 outline-none transition-all h-40 text-gray-900 placeholder:text-gray-500 text-[11pt] leading-relaxed resize-none"
                     placeholder="Tuliskan inti cerita atau suasana yang ingin dibangun... (Contoh: Kerinduan di pelabuhan tua saat hujan reda)"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -314,6 +329,21 @@ const App = () => {
                           className={`px-5 py-2.5 text-[11pt] rounded-2xl border transition-all ${tempo === t ? 'bg-purple-600 border-purple-400 text-white shadow-lg shadow-purple-900/40' : 'bg-white/5 border-white/5 text-white/40 hover:bg-white/10'}`}
                         >
                           {t} BPM
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="text-[11pt] uppercase font-black text-purple-500 tracking-[0.2em] block">Target Durasi (Menit)</label>
+                    <div className="flex flex-wrap gap-2">
+                      {options.durations.map(d => (
+                        <button 
+                          key={d} 
+                          onClick={() => setDuration(d)} 
+                          className={`px-5 py-2.5 text-[11pt] rounded-2xl border transition-all ${duration === d ? 'bg-purple-600 border-purple-400 text-white shadow-lg shadow-purple-900/40' : 'bg-white/5 border-white/5 text-white/40 hover:bg-white/10'}`}
+                        >
+                          {d} Menit
                         </button>
                       ))}
                     </div>
@@ -351,7 +381,7 @@ const App = () => {
                   className="space-y-8"
                 >
                   {/* Production Blueprint */}
-                  <div className="bg-[#0c0c0e] p-8 rounded-[3rem] border border-purple-500/20 shadow-2xl relative group">
+                  <div className="bg-[#0f172a]/80 p-8 rounded-[3rem] border border-purple-500/20 shadow-2xl relative group">
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
                         <div className="p-1.5 bg-purple-500/20 rounded-md">
@@ -410,7 +440,7 @@ const App = () => {
                   </div>
 
                   {/* Lyrics Section */}
-                  <div className="bg-[#0c0c0e] p-10 rounded-[3.5rem] border border-white/5 shadow-2xl relative overflow-hidden">
+                  <div className="bg-[#0f172a]/80 p-10 rounded-[3.5rem] border border-white/5 shadow-2xl relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-40" />
                     
                     <header className="text-center mb-12 border-b border-white/5 pb-10">
