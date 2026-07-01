@@ -16,7 +16,10 @@ import {
   ChevronRight,
   Info,
   Volume2,
-  Wind
+  Wind,
+  Play,
+  Pause,
+  RotateCcw
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI, Type } from "@google/genai";
@@ -33,6 +36,85 @@ interface SongResult {
   chord_map: string;
 }
 
+// Database of acoustic guitar chord frequencies
+const CHORD_FREQS: Record<string, number[]> = {
+  'G': [98.00, 146.83, 196.00, 246.94, 293.66, 392.00], // G2, D3, G3, B3, D4, G4
+  'C': [130.81, 164.81, 196.00, 261.63, 329.63, 523.25], // C3, E3, G3, C4, E4, C5
+  'D': [146.83, 220.00, 293.66, 369.99, 440.00, 587.33], // D3, A3, D4, F#4, A4, D5
+  'Em': [82.41, 131.81, 164.81, 196.00, 246.94, 329.63], // E2, E3, G3, B3, E4
+  'Am': [110.00, 164.81, 220.00, 261.63, 329.63, 440.00], // A2, E3, A3, C4, E4
+  'F': [87.31, 130.81, 174.61, 220.00, 261.63, 349.23], // F2, C3, F3, A3, C4
+  'Dm': [146.83, 220.00, 293.66, 349.23, 440.00], // D3, A3, D4, F4, A4
+  'A': [110.00, 164.81, 220.00, 277.18, 329.63, 440.00], // A2, E3, A3, C#4, E4
+  'E': [82.41, 164.81, 220.00, 329.63, 415.30], // E2, E3, G#3, B3, E4
+  'Bm': [123.47, 185.00, 246.94, 293.66, 369.99], // B2, F#3, B3, D4, F#4
+};
+
+const cleanChord = (raw: string): string => {
+  let c = raw.trim();
+  if (c.includes('/')) c = c.split('/')[0];
+  if (c.startsWith('C')) return c.includes('m') && !c.includes('maj') ? 'Dm' : 'C';
+  if (c.startsWith('G')) return c.includes('m') ? 'Gm' : 'G';
+  if (c.startsWith('D')) return c.includes('m') ? 'Dm' : 'D';
+  if (c.startsWith('A')) return c.includes('m') ? 'Am' : 'A';
+  if (c.startsWith('E')) return c.includes('m') ? 'Em' : 'E';
+  if (c.startsWith('F')) return c.includes('m') ? 'Fm' : 'F';
+  if (c.startsWith('B')) return c.includes('m') ? 'Bm' : 'Bm';
+  return 'G';
+};
+
+const parseChords = (chordMapStr: string): string[] => {
+  if (!chordMapStr) return ['G', 'Em', 'C', 'D'];
+  const matches = chordMapStr.match(/[A-G][a-zA-Z0-9#]*/g);
+  if (!matches || matches.length === 0) return ['G', 'Em', 'C', 'D'];
+  return matches.map(cleanChord);
+};
+
+const INDO_CREATORS = [
+  {
+    id: 'none',
+    name: 'Asli Studio',
+    tagline: 'Standard Akustik Puitis',
+    description: 'Kombinasi folk-akustik kontemporer puitis yang universal dan modern.',
+    promptInstruction: ''
+  },
+  {
+    id: 'ebiet_g_ade',
+    name: 'Ebiet G. Ade',
+    tagline: 'Balada Sastra Alam',
+    description: 'Sastra Indonesia baku, metafora alam (hujan, cemara, rumput), kontemplasi spiritual yang agung.',
+    promptInstruction: `PENTING - GAYA BAHASA EBIET G. ADE: Lirik WAJIB menggunakan Bahasa Indonesia baku yang sangat sastrawi, puitis, agung, dan elegan. Gunakan metafora alam yang kental (seperti desah angin, cemara, padang rumput, ombak, tanah kering, hujan) dan tema perenungan spiritual, moralitas, ketuhanan, serta kisah manusia yang penuh introspeksi.`
+  },
+  {
+    id: 'fiersa_besari',
+    name: 'Fiersa Besari',
+    tagline: 'Indie Folk Petualang',
+    description: 'Romantis kontemporer, senja, kopi, gunung, perjalanan, bahasa puitis namun lugas & relatable.',
+    promptInstruction: `PENTING - GAYA BAHASA FIERSA BESARI: Lirik WAJIB menggunakan gaya indie-folk kontemporer Indonesia yang hangat, jujur, melankolis, dan relatable. Gunakan diksi khas seperti 'senja', 'kopi', 'perjalanan', 'gunung', 'langit', 'arah', 'pulang'. Kalimat-kalimat puitis yang lugas, menceritakan cinta, perpisahan, atau petualangan anak muda masa kini.`
+  },
+  {
+    id: 'iwan_fals',
+    name: 'Iwan Fals',
+    tagline: 'Balada Rakyat Bersahaja',
+    description: 'Bahasa lugas, jujur, menggunakan analogi sehari-hari rakyat jelata, bersahaja & berkarakter kuat.',
+    promptInstruction: `PENTING - GAYA BAHASA IWAN FALS: Lirik WAJIB menggunakan gaya folk balada legendaris yang bersahaja, lugas, jujur, dan berkarakter kuat. Gunakan analogi kehidupan rakyat jelata sehari-hari, bahasa yang membumi namun memiliki kedalaman rasa, terkadang menyelipkan kritik atau cinta keluarga yang murni.`
+  },
+  {
+    id: 'alip_ba_ta',
+    name: 'Alip Ba Ta',
+    tagline: 'Meditatif Spiritual Sunyi',
+    description: 'Sangat mistis, minim lirik, gumaman magis (hums/chants), mengandalkan atmosfer kesunyian.',
+    promptInstruction: `PENTING - GAYA BAHASA ALIP BA TA: Gaya instrumental mistis dan spiritual. Lirik harus sangat minim, mengandalkan gumaman mistis dan chants/hums vokal yang meliuk syahdu (seperti "oooh", "aaah", "hmmm") yang mengelilingi kata-kata puitis sederhana tentang alam semesta, kesunyian malam, raga, dan kedamaian batin.`
+  },
+  {
+    id: 'jubing_kristianto',
+    name: 'Jubing Kristianto',
+    tagline: 'Klasik Nusantara Nostalgik',
+    description: 'Melodi indah meliuk-liuk, lirik bertema nina bobo, dongeng anak tradisional yang anggun.',
+    promptInstruction: `PENTING - GAYA BAHASA JUBING KRISTIANTO: Gaya klasik-nostalgik nusantara yang tenang. Liriknya bernuansa dongeng tradisional, nina bobo anak yang anggun, melodi meliuk indah yang riang namun menenangkan hati, dengan diksi yang lembut, jernih, penuh kehangatan masa kecil.`
+  }
+];
+
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState('');
@@ -48,6 +130,7 @@ const App = () => {
   const [tempo, setTempo] = useState('60-80');
   const [duration, setDuration] = useState(4);
   const [isOriginal, setIsOriginal] = useState(false);
+  const [creator, setCreator] = useState('none');
   const [result, setResult] = useState<SongResult | null>(null);
   const [history, setHistory] = useState<SongResult[]>(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('akustik_history') : null;
@@ -55,6 +138,251 @@ const App = () => {
   });
   const [copiedLirik, setCopiedLirik] = useState(false);
   const [copiedProps, setCopiedProps] = useState(false);
+
+  // Audio Player States
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0); // in seconds
+  const [visualizerData, setVisualizerData] = useState<number[]>(new Array(16).fill(4));
+
+  const currentTimeRef = useRef(0);
+  const playTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const nextNoteTimeRef = useRef<number>(0);
+  const schedulerTimerRef = useRef<number | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+
+  const updateCurrentTime = (time: number) => {
+    setCurrentTime(time);
+    currentTimeRef.current = time;
+  };
+
+  const createAudioChain = (ctx: AudioContext) => {
+    const input = ctx.createGain();
+    const delay = ctx.createDelay(1.0);
+    const delayFeedback = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+    const output = ctx.createGain();
+
+    delay.delayTime.setValueAtTime(0.35, ctx.currentTime);
+    delayFeedback.gain.setValueAtTime(0.32, ctx.currentTime);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1200, ctx.currentTime);
+
+    input.connect(delay);
+    delay.connect(filter);
+    filter.connect(delayFeedback);
+    delayFeedback.connect(delay);
+
+    input.connect(output);
+    delay.connect(output);
+    
+    return { input, output };
+  };
+
+  const playGuitarPluck = (ctx: AudioContext, destination: AudioNode, freq: number, time: number) => {
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    const biquadFilter = ctx.createBiquadFilter();
+
+    osc1.type = 'triangle';
+    osc1.frequency.setValueAtTime(freq, time);
+
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(freq * 2, time);
+
+    biquadFilter.type = 'lowpass';
+    biquadFilter.frequency.setValueAtTime(2000, time);
+    biquadFilter.frequency.exponentialRampToValueAtTime(150, time + 0.8);
+
+    gainNode.gain.setValueAtTime(0, time);
+    gainNode.gain.linearRampToValueAtTime(0.25, time + 0.006);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, time + 1.6);
+
+    osc1.connect(biquadFilter);
+    osc2.connect(biquadFilter);
+    biquadFilter.connect(gainNode);
+    gainNode.connect(destination);
+
+    osc1.start(time);
+    osc1.stop(time + 1.8);
+    osc2.start(time);
+    osc2.stop(time + 1.8);
+
+    // Pick noise transient
+    const noiseLength = ctx.sampleRate * 0.01;
+    const buffer = ctx.createBuffer(1, noiseLength, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < noiseLength; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    const noiseSource = ctx.createBufferSource();
+    noiseSource.buffer = buffer;
+
+    const noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = 'highpass';
+    noiseFilter.frequency.setValueAtTime(3000, time);
+
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.04, time);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.01);
+
+    noiseSource.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(destination);
+
+    noiseSource.start(time);
+    noiseSource.stop(time + 0.012);
+  };
+
+  const stopAudio = () => {
+    setIsPlaying(false);
+    
+    if (schedulerTimerRef.current) {
+      clearTimeout(schedulerTimerRef.current);
+      schedulerTimerRef.current = null;
+    }
+    
+    if (playTimerRef.current) {
+      clearTimeout(playTimerRef.current);
+      playTimerRef.current = null;
+    }
+
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+
+    setVisualizerData(new Array(16).fill(4));
+  };
+
+  const startAudio = () => {
+    if (isPlaying) return;
+
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new AudioCtx();
+    }
+
+    const ctx = audioCtxRef.current;
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
+
+    setIsPlaying(true);
+
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 64;
+    analyserRef.current = analyser;
+
+    const effectChain = createAudioChain(ctx);
+    effectChain.output.connect(analyser);
+    analyser.connect(ctx.destination);
+
+    nextNoteTimeRef.current = ctx.currentTime + 0.05;
+    
+    const chordProgression = result ? parseChords(result.chord_map) : ['G', 'Em', 'C', 'D'];
+    const parsedTempo = parseInt(tempo.split('-')[0]) || 70;
+    const eighthNoteDuration = 60 / parsedTempo / 2;
+
+    let currentSubBeat = Math.floor((currentTimeRef.current / eighthNoteDuration) % 8);
+    let currentChordIdx = Math.floor((currentTimeRef.current / (eighthNoteDuration * 8)) % chordProgression.length);
+
+    const scheduleAheadTime = 0.12;
+    const lookahead = 25.0;
+
+    const scheduleNextNote = () => {
+      while (nextNoteTimeRef.current < ctx.currentTime + scheduleAheadTime) {
+        const chordName = chordProgression[currentChordIdx];
+        const notes = CHORD_FREQS[chordName] || CHORD_FREQS['G'];
+
+        let noteFreq = notes[0];
+        switch (currentSubBeat) {
+          case 0: noteFreq = notes[0]; break;
+          case 1: noteFreq = notes[2] || notes[1]; break;
+          case 2: noteFreq = notes[4] || notes[3]; break;
+          case 3: noteFreq = notes[3] || notes[2]; break;
+          case 4: noteFreq = notes[1] || notes[0]; break;
+          case 5: noteFreq = notes[5] || notes[4]; break;
+          case 6: noteFreq = notes[3] || notes[2]; break;
+          case 7: noteFreq = notes[4] || notes[3]; break;
+        }
+
+        const humanDelay = (Math.random() - 0.5) * 0.01;
+        playGuitarPluck(ctx, effectChain.input, noteFreq, nextNoteTimeRef.current + humanDelay);
+
+        nextNoteTimeRef.current += eighthNoteDuration;
+        currentSubBeat = (currentSubBeat + 1) % 8;
+        if (currentSubBeat === 0) {
+          currentChordIdx = (currentChordIdx + 1) % chordProgression.length;
+        }
+      }
+    };
+
+    const scheduler = () => {
+      scheduleNextNote();
+      schedulerTimerRef.current = window.setTimeout(scheduler, lookahead);
+    };
+    scheduler();
+
+    const startTime = ctx.currentTime - currentTimeRef.current;
+    const updateProgress = () => {
+      const elapsed = ctx.currentTime - startTime;
+      const targetTotal = duration * 60;
+      
+      if (elapsed >= targetTotal) {
+        stopAudio();
+        updateCurrentTime(targetTotal);
+      } else {
+        updateCurrentTime(elapsed);
+        playTimerRef.current = setTimeout(updateProgress, 100);
+      }
+    };
+    updateProgress();
+
+    const updateVisuals = () => {
+      if (analyserRef.current) {
+        const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+        analyserRef.current.getByteFrequencyData(dataArray);
+        
+        const scaled = Array.from(dataArray.slice(0, 16)).map(val => {
+          return Math.max(4, (val / 255) * 40);
+        });
+        setVisualizerData(scaled);
+      }
+      animationFrameRef.current = requestAnimationFrame(updateVisuals);
+    };
+    updateVisuals();
+  };
+
+  const seekTo = (seconds: number) => {
+    const wasPlaying = isPlaying;
+    stopAudio();
+    updateCurrentTime(seconds);
+    
+    if (wasPlaying) {
+      setTimeout(() => {
+        startAudio();
+      }, 50);
+    }
+  };
+
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
+  React.useEffect(() => {
+    return () => {
+      stopAudio();
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close();
+      }
+    };
+  }, []);
 
   const options = {
     genres: [
@@ -139,14 +467,20 @@ const App = () => {
 
   const generateSong = async () => {
     if (!description) return;
+    stopAudio();
+    updateCurrentTime(0);
     setLoading(true);
     setResult(null);
     
+    const activeCreator = INDO_CREATORS.find(c => c.id === creator);
+    const creatorInstruction = activeCreator && activeCreator.promptInstruction ? activeCreator.promptInstruction : '';
+
     const systemPrompt = `Anda adalah Produser Musik Akustik Kelas Dunia & Penulis Lirik Puitis Senior.
     TUGAS: Ciptakan paket produksi lagu akustik profesional yang mendalam.
     
     PANDUAN KHUSUS PRODUKSI:
     - LIRIK: Harus puitis, menggunakan metafora yang kuat, dan memiliki struktur lagu yang jelas (Intro, Verse, Chorus, Bridge, Outro).
+    - MAKSIMAL KARAKTER: Seluruh teks hasil lirik dan chord pada field \`lirik\` harus ringkas, padat, puitis, dan SANGAT PENTING: tidak boleh melebihi 5400 karakter.
     - DURASI: Pastikan panjang lagu dan jumlah baris lirik sesuai dengan target durasi ${duration} menit yang diminta.
     - INSTRUKSI TEKNIS LIRIK: SETIAP TAG struktur (misal: [Intro], [Verse 1], [Chorus]) WAJIB diikuti instruksi teknis dalam kurung di baris yang sama. 
       Contoh: [Intro] (Tempo: 65 BPM, Travis Picking, Low Intensity).
@@ -155,6 +489,8 @@ const App = () => {
     - ARRANGEMENT: Berikan catatan teknis untuk setiap bagian di field arrangement_notes.
     - MIXING/MASTERING: Berikan panduan teknis untuk sound engineer di field mixing_mastering_guide.
     - TEMPO: Harus spesifik dalam rentang ${tempo} BPM.
+
+    ${creatorInstruction}
 
     ${isOriginal ? 
       `MODE ORIGINAL AKTIF: Fokus utama adalah mempertahankan SETIAP KATA dari deskripsi user jika itu berupa lirik. Jangan mengubah metafora atau pilihan kata asli user.` : 
@@ -200,6 +536,12 @@ const App = () => {
       });
 
       const data = JSON.parse(response.text || '{}') as SongResult;
+      
+      // Ensure strict adherence to 5400 character limit defensively
+      if (data && data.lirik) {
+        data.lirik = data.lirik.slice(0, 5400);
+      }
+
       setResult(data);
       
       setHistory(prev => {
@@ -303,6 +645,36 @@ const App = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
+                </div>
+
+                <div className="space-y-4">
+                  <label className="text-[11pt] uppercase font-black text-purple-500 tracking-[0.2em] block">
+                    Inspirasi Gaya Pencipta (Acoustic/Fingerstyle Indonesia)
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {INDO_CREATORS.map((item) => (
+                      <button
+                        type="button"
+                        key={item.id}
+                        onClick={() => setCreator(item.id)}
+                        className={`p-4 rounded-3xl border text-left transition-all relative overflow-hidden ${
+                          creator === item.id
+                            ? 'bg-purple-600/20 border-purple-500/60 text-white shadow-lg shadow-purple-950/40'
+                            : 'bg-white/5 border-white/5 text-white/60 hover:bg-white/10'
+                        }`}
+                      >
+                        <div className="flex justify-between items-center gap-2 mb-1.5">
+                          <span className="font-bold text-sm text-white">{item.name}</span>
+                          <span className={`text-[8px] uppercase tracking-wider font-black px-2 py-0.5 rounded-md ${creator === item.id ? 'bg-purple-500 text-white' : 'bg-white/5 text-white/40'}`}>
+                            {item.tagline}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-white/40 leading-relaxed">
+                          {item.description}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -452,6 +824,59 @@ const App = () => {
                         <Wind className="w-6 h-6 text-purple-500/40" />
                       </motion.div>
                       <h3 className="text-4xl font-serif font-black text-white mb-6 tracking-tight">{result.judul}</h3>
+                      
+                      {/* Real Music Player Card */}
+                      <div className="max-w-md mx-auto mb-8 bg-black/40 border border-white/5 rounded-3xl p-6 shadow-inner relative overflow-hidden group">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-[10px] uppercase font-black text-purple-400 tracking-[0.2em]">Real-Time Acoustic Player</span>
+                          <span className="text-xs font-mono text-purple-200/50">{formatTime(currentTime)} / {formatTime(duration * 60)}</span>
+                        </div>
+
+                        {/* Visualizer bars */}
+                        <div className="flex justify-center items-end gap-1 h-14 w-full px-4 py-2 bg-[#050a18]/60 rounded-2xl border border-white/5 mb-6">
+                          {visualizerData.map((height, i) => (
+                            <motion.div
+                              key={i}
+                              className="w-1.5 bg-gradient-to-t from-purple-500 to-indigo-400 rounded-full"
+                              style={{ height }}
+                              transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                            />
+                          ))}
+                        </div>
+
+                        {/* Player controls & scrubber */}
+                        <div className="space-y-4">
+                          <input 
+                            type="range" 
+                            min="0" 
+                            max={duration * 60} 
+                            value={currentTime} 
+                            onChange={(e) => seekTo(Number(e.target.value))}
+                            className="w-full accent-purple-500 bg-white/10 rounded-lg appearance-none h-1 cursor-pointer transition-all hover:bg-white/20"
+                          />
+                          
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-white/30 font-mono">Tempo: {tempo} BPM</span>
+                            <div className="flex items-center gap-4">
+                              <button 
+                                onClick={() => seekTo(0)}
+                                className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-white/60 transition-all hover:scale-105 active:scale-95"
+                                title="Reset"
+                              >
+                                <RotateCcw size={16} />
+                              </button>
+                              <button 
+                                onClick={isPlaying ? stopAudio : startAudio}
+                                className="p-4 rounded-full bg-purple-600 hover:bg-purple-500 text-white transition-all shadow-lg shadow-purple-900/30 hover:scale-105 active:scale-95"
+                              >
+                                {isPlaying ? <Pause size={18} fill="white" /> : <Play size={18} fill="white" className="ml-0.5" />}
+                              </button>
+                            </div>
+                            <span className="text-xs text-white/30 font-mono">{genre}</span>
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="flex justify-center">
                          <button 
                           onClick={() => copyToClipboard(result.lirik, 'lirik')}
