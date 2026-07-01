@@ -397,7 +397,8 @@ const App = () => {
     ],
     moods: [
       'Nostalgik', 'Sepi', 'Hangat', 'Gelisah', 'Misterius', 'Romantis', 
-      'Damai', 'Berdebu', 'Pagi yang Dingin', 'Senja Keemasan', 'Hutan Hujan', 'Urban Acoustic'
+      'Damai', 'Berdebu', 'Pagi yang Dingin', 'Senja Keemasan', 'Hutan Hujan', 'Urban Acoustic',
+      'Api Unggun', 'Nongkrong', 'Warkop'
     ],
     emotions: [
       'Rindu', 'Penyesalan', 'Harapan', 'Patah Hati', 'Kagum', 'Sendiri', 
@@ -479,6 +480,7 @@ const App = () => {
     TUGAS: Ciptakan paket produksi lagu akustik profesional yang mendalam.
     
     PANDUAN KHUSUS PRODUKSI:
+    - TANPA NAMA TOKOH/ARTIS: DILARANG KERAS menyebutkan atau mencantumkan nama artis, nama penyanyi, nama pencipta lagu, atau nama orang nyata/tokoh siapapun di dalam judul, lirik, chord, ataupun catatan aransemen/mixing. Hasil lagu harus bersifat universal tanpa referensi nama tokoh/individu.
     - LIRIK: Harus puitis, menggunakan metafora yang kuat, dan memiliki struktur lagu yang jelas (Intro, Verse, Chorus, Bridge, Outro).
     - MAKSIMAL KARAKTER: Seluruh teks hasil lirik dan chord pada field \`lirik\` harus ringkas, padat, puitis, dan SANGAT PENTING: tidak boleh melebihi 5400 karakter.
     - DURASI: Pastikan panjang lagu dan jumlah baris lirik sesuai dengan target durasi ${duration} menit yang diminta.
