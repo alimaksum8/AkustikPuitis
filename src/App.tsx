@@ -74,9 +74,9 @@ const INDO_CREATORS = [
   {
     id: 'none',
     name: 'Asli Studio',
-    tagline: 'Standard Akustik Puitis',
-    description: 'Kombinasi folk-akustik kontemporer puitis yang universal dan modern.',
-    promptInstruction: ''
+    tagline: 'Akustik Sederhana',
+    description: 'Bahasa mengalir indah, sederhana, jujur, mudah dipahami, dan penuh makna mendalam.',
+    promptInstruction: `PENTING - GAYA ASLI STUDIO: Gunakan bahasa sehari-hari yang tulus, jujur, mengalir indah, sederhana, dan mudah dicerna oleh siapa saja. Fokus pada kedalaman rasa dan pesan kehidupan yang jernih, hindari istilah puitis yang terlalu abstrak atau sulit dipahami.`
   },
   {
     id: 'ebiet_g_ade',
@@ -476,12 +476,12 @@ const App = () => {
     const activeCreator = INDO_CREATORS.find(c => c.id === creator);
     const creatorInstruction = activeCreator && activeCreator.promptInstruction ? activeCreator.promptInstruction : '';
 
-    const systemPrompt = `Anda adalah Produser Musik Akustik Kelas Dunia & Penulis Lirik Puitis Senior.
+    const systemPrompt = `Anda adalah Produser Musik Akustik Kelas Dunia & Penulis Lirik Lagu yang Jujur dan Sederhana.
     TUGAS: Ciptakan paket produksi lagu akustik profesional yang mendalam.
     
     PANDUAN KHUSUS PRODUKSI:
     - TANPA NAMA TOKOH/ARTIS: DILARANG KERAS menyebutkan atau mencantumkan nama artis, nama penyanyi, nama pencipta lagu, atau nama orang nyata/tokoh siapapun di dalam judul, lirik, chord, ataupun catatan aransemen/mixing. Hasil lagu harus bersifat universal tanpa referensi nama tokoh/individu.
-    - LIRIK: Harus puitis, menggunakan metafora yang kuat, dan memiliki struktur lagu yang jelas (Intro, Verse, Chorus, Bridge, Outro).
+    - LIRIK: GAYA BAHASA HARUS SEDERHANA, mengalir indah, penuh makna, dan mudah dipahami. JANGAN menggunakan bahasa puitis yang rumit, metafora yang terlalu abstrak, atau diksi sastra kuno/berat yang sulit dimengerti. Gunakan bahasa sehari-hari yang tulus namun tetap menyentuh hati, serta memiliki PESAN atau AMANAT yang jelas tersampaikan kepada pendengar. Lagu harus memiliki struktur lagu yang jelas (Intro, Verse, Chorus, Bridge, Outro).
     - MAKSIMAL KARAKTER: Seluruh teks hasil lirik dan chord pada field \`lirik\` harus ringkas, padat, puitis, dan SANGAT PENTING: tidak boleh melebihi 5400 karakter.
     - DURASI: Pastikan panjang lagu dan jumlah baris lirik sesuai dengan target durasi ${duration} menit yang diminta.
     - INSTRUKSI TEKNIS LIRIK: SETIAP TAG struktur (misal: [Intro], [Verse 1], [Chorus]) WAJIB diikuti instruksi teknis dalam kurung di baris yang sama. 
