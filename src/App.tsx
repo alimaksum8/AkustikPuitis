@@ -76,49 +76,89 @@ const INDO_CREATORS = [
     name: 'Asli Studio',
     tagline: 'Akustik Sederhana',
     description: 'Bahasa mengalir indah, sederhana, jujur, mudah dipahami, dan penuh makna mendalam.',
-    promptInstruction: `PENTING - GAYA ASLI STUDIO: Gunakan bahasa sehari-hari yang tulus, jujur, mengalir indah, sederhana, dan mudah dicerna oleh siapa saja. Fokus pada kedalaman rasa dan pesan kehidupan yang jernih, hindari istilah puitis yang terlalu abstrak atau sulit dipahami.`
+    promptInstruction: `PENTING - GAYA ASLI STUDIO: Gunakan bahasa sehari-hari yang tulus, jujur, mengalir indah, sederhana, dan mudah dicerna oleh siapa saja. Fokus pada kedalaman rasa dan pesan kehidupan yang jernih, hindari istilah puitis yang terlalu abstrak atau sulit dipahami. Pastikan lirik terasa sangat natural seperti ditulis langsung oleh manusia secara jujur.`
   },
   {
-    id: 'ebiet_g_ade',
-    name: 'Ebiet G. Ade',
-    tagline: 'Balada Sastra Alam',
-    description: 'Sastra Indonesia baku, metafora alam (hujan, cemara, rumput), kontemplasi spiritual yang agung.',
-    promptInstruction: `PENTING - GAYA BAHASA EBIET G. ADE: Lirik WAJIB menggunakan Bahasa Indonesia baku yang sangat sastrawi, puitis, agung, dan elegan. Gunakan metafora alam yang kental (seperti desah angin, cemara, padang rumput, ombak, tanah kering, hujan) dan tema perenungan spiritual, moralitas, ketuhanan, serta kisah manusia yang penuh introspeksi.`
+    id: 'ariel_noah',
+    name: 'Ariel NOAH',
+    tagline: 'Pop Alternatif Filosofis',
+    description: 'Bahasa sehari-hari yang dalam, penuh analogi kehidupan/cinta yang realistis, mengalir tenang, membawa pesan harapan.',
+    promptInstruction: `PENTING - GAYA BAHASA ARIEL NOAH: Lirik harus menggunakan bahasa sehari-hari yang mengalir indah, penuh kedalaman makna tanpa terasa berat atau rumit. Gunakan sudut pandang yang jujur, realistis tentang cinta atau perjuangan hidup. Nada lirik hangat, tulus, tidak kaku, dan menyampaikan pesan optimisme atau penerimaan yang bermakna bagi pendengar seolah-olah ditulis langsung oleh Ariel.`
   },
   {
-    id: 'fiersa_besari',
-    name: 'Fiersa Besari',
-    tagline: 'Indie Folk Petualang',
-    description: 'Romantis kontemporer, senja, kopi, gunung, perjalanan, bahasa puitis namun lugas & relatable.',
-    promptInstruction: `PENTING - GAYA BAHASA FIERSA BESARI: Lirik WAJIB menggunakan gaya indie-folk kontemporer Indonesia yang hangat, jujur, melankolis, dan relatable. Gunakan diksi khas seperti 'senja', 'kopi', 'perjalanan', 'gunung', 'langit', 'arah', 'pulang'. Kalimat-kalimat puitis yang lugas, menceritakan cinta, perpisahan, atau petualangan anak muda masa kini.`
+    id: 'charlie_st12',
+    name: 'Charlie Van Hoten ST 12',
+    tagline: 'Melayu Pop Emosional',
+    description: 'Sangat menyentuh hati, lirik jujur, curahan perasaan yang tulus tentang rindu, perpisahan, atau kesetiaan.',
+    promptInstruction: `PENTING - GAYA BAHASA CHARLIE VAN HOTEN ST 12: Lirik harus menggunakan gaya bahasa sehari-hari yang sangat jujur, emosional, dan langsung menyentuh perasaan (relatable). Hindari kata-kata yang rumit or abstrak. Fokus pada curahan hati yang tulus tentang kerinduan, ketulusan cinta, atau rasa kehilangan, mengalir indah penuh kehangatan emosi manusia nyata.`
   },
   {
-    id: 'iwan_fals',
-    name: 'Iwan Fals',
-    tagline: 'Balada Rakyat Bersahaja',
-    description: 'Bahasa lugas, jujur, menggunakan analogi sehari-hari rakyat jelata, bersahaja & berkarakter kuat.',
-    promptInstruction: `PENTING - GAYA BAHASA IWAN FALS: Lirik WAJIB menggunakan gaya folk balada legendaris yang bersahaja, lugas, jujur, dan berkarakter kuat. Gunakan analogi kehidupan rakyat jelata sehari-hari, bahasa yang membumi namun memiliki kedalaman rasa, terkadang menyelipkan kritik atau cinta keluarga yang murni.`
+    id: 'piyu_padi',
+    name: 'Piyu PADI',
+    tagline: 'Balada Pop Megah & Dalam',
+    description: 'Penuh makna kontemplatif, menyuarakan perjalanan batin, keteguhan hati, dan kasih sayang yang tulus.',
+    promptInstruction: `PENTING - GAYA BAHASA PIYU PADI: Lirik harus menggunakan bahasa sederhana yang mengalir anggun dan penuh perenungan tentang kehidupan, takdir, atau cinta sejati. Hindari diksi yang terlalu berat. Pastikan ada pesan atau amanat yang jelas tersampaikan kepada pendengar tentang harapan dan keteguhan jiwa, ditulis dengan natural dan hidup.`
   },
   {
-    id: 'alip_ba_ta',
-    name: 'Alip Ba Ta',
-    tagline: 'Meditatif Spiritual Sunyi',
-    description: 'Sangat mistis, minim lirik, gumaman magis (hums/chants), mengandalkan atmosfer kesunyian.',
-    promptInstruction: `PENTING - GAYA BAHASA ALIP BA TA: Gaya instrumental mistis dan spiritual. Lirik harus sangat minim, mengandalkan gumaman mistis dan chants/hums vokal yang meliuk syahdu (seperti "oooh", "aaah", "hmmm") yang mengelilingi kata-kata puitis sederhana tentang alam semesta, kesunyian malam, raga, dan kedamaian batin.`
+    id: 'andra_dewa',
+    name: 'Andra DEWA',
+    tagline: 'Romantisme Modern Dewasa',
+    description: 'Lirik jernih, bahasa sehari-hari yang romantis namun realistis, menceritakan keindahan cinta yang murni.',
+    promptInstruction: `PENTING - GAYA BAHASA ANDRA DEWA: Lirik harus menggunakan bahasa sehari-hari yang romantis, jernih, dan dewasa tanpa terkesan rumit atau kaku. Sampaikan pesan cinta yang murni, ketulusan hati, atau perjalanan rasa dengan alur lirik yang mengalir lancar dan bernada damai.`
   },
   {
-    id: 'jubing_kristianto',
-    name: 'Jubing Kristianto',
-    tagline: 'Klasik Nusantara Nostalgik',
-    description: 'Melodi indah meliuk-liuk, lirik bertema nina bobo, dongeng anak tradisional yang anggun.',
-    promptInstruction: `PENTING - GAYA BAHASA JUBING KRISTIANTO: Gaya klasik-nostalgik nusantara yang tenang. Liriknya bernuansa dongeng tradisional, nina bobo anak yang anggun, melodi meliuk indah yang riang namun menenangkan hati, dengan diksi yang lembut, jernih, penuh kehangatan masa kecil.`
+    id: 'eros_sheila',
+    name: 'Eros SHEILA ON 7',
+    tagline: 'Pop Ceria & Hangat',
+    description: 'Sangat ramah di telinga, kata-kata sederhana sehari-hari yang jujur, penuh pesan persahabatan atau cinta yang murni.',
+    promptInstruction: `PENTING - GAYA BAHASA EROS SHEILA ON 7: Lirik harus menggunakan bahasa sehari-hari yang sangat bersahabat, hangat, jujur, dan mengalir santai tanpa kaku. Sampaikan pesan positif tentang hidup, persahabatan, atau cinta yang manis dan tulus. Gunakan diksi yang akrab di telinga kita sehari-hari, terasa hidup dan ditulis dengan senyum tulus.`
+  },
+  {
+    id: 'noe_letto',
+    name: 'Noe LETTO',
+    tagline: 'Kontemplatif Sufistik Sederhana',
+    description: 'Penuh amanat kehidupan yang dalam namun dibalut bahasa sehari-hari yang sangat santun dan menenangkan batin.',
+    promptInstruction: `PENTING - GAYA BAHASA NOE LETTO: Lirik harus menggunakan bahasa sehari-hari yang sangat sederhana namun memiliki kedalaman pesan/amanat kehidupan yang luar biasa (spiritual/filosofis yang membumi). Hindari metafora rumit. Sampaikan pesan kedamaian batin, pencarian kebenaran, atau hubungan manusia yang tulus dengan alur lirik yang tenang, mengalir indah, dan terasa sangat organik.`
+  }
+];
+
+const GUITAR_PRESETS = [
+  {
+    genre: 'Acoustic Pop',
+    characteristics: "Gitar akustik menjadi instrumen utama. Strumming ritmis ('ngejreng') mendominasi. Cocok untuk lagu santai, romantis, dan easy listening.",
+    styles: "Bright Acoustic, Modern Acoustic, Clean Strumming, Radio Acoustic Pop, Feel Good Acoustic, Romantic Acoustic, Contemporary Acoustic, Organic Pop, Sunny Acoustic, Upbeat Acoustic"
+  },
+  {
+    genre: 'Campfire Acoustic',
+    characteristics: "Identik dengan suasana api unggun atau nongkrong bersama teman. Biasanya hanya gitar akustik, tepuk tangan, dan vokal ramai. Nuansanya hangat dan akrab.",
+    styles: "Campfire Session, Bonfire Acoustic, Friends Gathering, Live Acoustic, Group Sing Along, Hand Claps, Rustic Acoustic, Organic Live, Backyard Jam, Warm Acoustic"
+  },
+  {
+    genre: 'Acoustic Folk',
+    characteristics: "Dominan gitar akustik. Ritme sederhana. Lirik bercerita. Kadang ditambah harmonika, cajon, atau biola.",
+    styles: "Indie Folk, Storytelling Folk, Rustic Folk, Traditional Folk, Modern Folk, Fingerstyle Folk, Americana Folk, Celtic Folk, Nature Folk, Minimal Folk"
+  },
+  {
+    genre: 'Sing-Along Acoustic',
+    characteristics: "Aransemen dibuat agar mudah dinyanyikan bersama. Chorus kuat. Strumming konsisten.",
+    styles: "Anthem Acoustic, Group Chorus, Community Sing Along, Open Chord Strumming, Festival Acoustic, Live Crowd, Feel Good Acoustic, Happy Acoustic, Family Gathering, Camp Song"
+  },
+  {
+    genre: 'Coffee Shop Acoustic',
+    characteristics: "Musik akustik ringan untuk suasana kafe. Tempo santai. Banyak menggunakan gitar akustik bersih.",
+    styles: "Café Acoustic, Chill Acoustic, Cozy Acoustic, Soft Lounge, Relaxing Guitar, Smooth Acoustic, Easy Listening, Sunday Morning, Lo-Fi Acoustic, Intimate Acoustic"
+  },
+  {
+    genre: 'Unplugged',
+    characteristics: "Versi akustik dari lagu yang biasanya dimainkan secara elektrik. Suara dibuat natural seolah pertunjukan langsung.",
+    styles: "Live Unplugged, Raw Acoustic, Studio Live Session, MTV Style Acoustic, Minimal Arrangement, Pure Acoustic, Vocal Focused, Natural Room, Intimate Performance, Acoustic Live Band"
   }
 ];
 
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState('');
-  const [genre, setGenre] = useState('Indie Folk');
+  const [genre, setGenre] = useState('Acoustic Pop');
   const [key, setKey] = useState('G Major (Standard)');
   const [mood, setMood] = useState<string[]>([]);
   const [emotion, setEmotion] = useState<string[]>([]);
@@ -386,9 +426,9 @@ const App = () => {
 
   const options = {
     genres: [
-      'Indie Folk', 'Contemporary Acoustic', 'Acoustic Blues', 'Fingerstyle Solo', 
-      'Soft Pop Acoustic', 'Country Folk', 'Bossa Nova', 'Flamenco Fusion', 
-      'Americana', 'Acoustic Soul', 'Celtic Folk', 'Ethereal Acoustic'
+      'Acoustic Pop', 'Campfire Acoustic', 'Acoustic Folk', 'Sing-Along Acoustic', 
+      'Coffee Shop Acoustic', 'Unplugged', 'Fingerstyle Solo', 'Acoustic Blues', 
+      'Bossa Nova', 'Flamenco Fusion', 'Ethereal Acoustic'
     ],
     keys: [
       'G Major (Standard)', 'C Major (Pure)', 'D Major (Bright)', 'A Major (Warm)', 
@@ -476,12 +516,23 @@ const App = () => {
     const activeCreator = INDO_CREATORS.find(c => c.id === creator);
     const creatorInstruction = activeCreator && activeCreator.promptInstruction ? activeCreator.promptInstruction : '';
 
-    const systemPrompt = `Anda adalah Produser Musik Akustik Kelas Dunia & Penulis Lirik Lagu yang Jujur dan Sederhana.
+    const activePreset = GUITAR_PRESETS.find(p => p.genre === genre);
+    const presetInstruction = activePreset 
+      ? `\nPRESET STYLE MANDATE: Lagu ini dibuat dengan preset "${activePreset.genre}". Anda harus menyelaraskan lirik, aransemen, dan chord agar sesuai dengan Karakteristik Preset: "${activePreset.characteristics}". Hasil musik Anda harus selaras dengan Style/Tags: "${activePreset.styles}".` 
+      : '';
+
+    const systemPrompt = `Anda adalah Produser Musik Akustik Kelas Dunia & Penulis Lirik Lagu Senior yang menulis lagu dengan tulus, jujur, dan mengalir alami.
     TUGAS: Ciptakan paket produksi lagu akustik profesional yang mendalam.
     
     PANDUAN KHUSUS PRODUKSI:
     - TANPA NAMA TOKOH/ARTIS: DILARANG KERAS menyebutkan atau mencantumkan nama artis, nama penyanyi, nama pencipta lagu, atau nama orang nyata/tokoh siapapun di dalam judul, lirik, chord, ataupun catatan aransemen/mixing. Hasil lagu harus bersifat universal tanpa referensi nama tokoh/individu.
-    - LIRIK: GAYA BAHASA HARUS SEDERHANA, mengalir indah, penuh makna, dan mudah dipahami. JANGAN menggunakan bahasa puitis yang rumit, metafora yang terlalu abstrak, atau diksi sastra kuno/berat yang sulit dimengerti. Gunakan bahasa sehari-hari yang tulus namun tetap menyentuh hati, serta memiliki PESAN atau AMANAT yang jelas tersampaikan kepada pendengar. Lagu harus memiliki struktur lagu yang jelas (Intro, Verse, Chorus, Bridge, Outro).
+    - STYLE PROMPT COMBINED (SANGAT KRUSIAL UNTUK SUNO, UDIO, YOLLY AI, SONGGENERATOR IO): 
+      - Jika Genre yang dipilih adalah "Fingerstyle Solo", field "style_prompt_combined" WAJIB diisi dengan instruksi instrumental murni yang sangat ketat dan berulang-ulang untuk memaksa AI eksternal agar hanya menggunakan gitar akustik tunggal tanpa vokal dan tanpa instrumen lain. Contoh isi prompt wajib seperti: "pure instrumental, solo acoustic guitar, fingerstyle acoustic guitar, solo guitar, no vocals, absolute instrumental, clean acoustic guitar recording, organic acoustic, zero vocals, no drums, no bass, no synth, no piano, no percussion, fingerpicking solo, steel strings". DILARANG memasukkan unsur vokal atau instrumen lain ke dalam style_prompt_combined untuk genre ini.
+      - Jika Genre lain, pastikan "style_prompt_combined" mendeskripsikan secara akurat instrumen, vokal, tempo, dan efek musik yang terpilih secara spesifik tanpa melenceng ke genre lain.
+      ${activePreset ? `- KHUSUS PRESET "${activePreset.genre}": Field "style_prompt_combined" WAJIB mencantumkan beberapa style berikut agar sinkron dengan output Suno/Udio/Yolly: ${activePreset.styles}` : ''}
+    - LIRIK & STRUKTUR UNTUK FINGERSTYLE SOLO: jika Genre yang dipilih adalah "Fingerstyle Solo", lirik lagu dapat berupa gumaman/senandung lembut (seperti "hmmm", "oooh", "aaah") atau petunjuk teknik memetik gitar yang detail di setiap baris (misal: memetik bass Gadd9, tapping, harmonics) yang disusun mengalir indah, sehingga tidak mengundang AI eksternal untuk menyanyikan lirik vokal melodi yang ramai.
+    - LIRIK: GAYA BAHASA HARUS SEDERHANA, mengalir indah, penuh makna, dan mudah dipahami. JANGAN menggunakan bahasa puitis yang rumit, metafora yang terlalu abstrak, atau diksi sastra kuno/berat yang sulit dimengerti. Gunakan bahasa sehari-hari yang tulus namun tetap menyentuh hati, serta memiliki PESAN atau AMANAT berharga yang jelas tersampaikan kepada pendengar.
+    - KARAKTER PENCIPTA: Hasil lirik WAJIB sangat sesuai dengan karakter bahasa pencipta yang dipilih (instruksi pencipta ada di bawah). Lirik tidak boleh kaku, robotik, atau klise, melainkan harus mengalir alami, hidup, dan organik seperti ciptaan manusia sungguhan yang menuangkan isi hatinya.
     - MAKSIMAL KARAKTER: Seluruh teks hasil lirik dan chord pada field \`lirik\` harus ringkas, padat, puitis, dan SANGAT PENTING: tidak boleh melebihi 5400 karakter.
     - DURASI: Pastikan panjang lagu dan jumlah baris lirik sesuai dengan target durasi ${duration} menit yang diminta.
     - INSTRUKSI TEKNIS LIRIK: SETIAP TAG struktur (misal: [Intro], [Verse 1], [Chorus]) WAJIB diikuti instruksi teknis dalam kurung di baris yang sama. 
@@ -493,6 +544,7 @@ const App = () => {
     - TEMPO: Harus spesifik dalam rentang ${tempo} BPM.
 
     ${creatorInstruction}
+    ${presetInstruction}
 
     ${isOriginal ? 
       `MODE ORIGINAL AKTIF: Fokus utama adalah mempertahankan SETIAP KATA dari deskripsi user jika itu berupa lirik. Jangan mengubah metafora atau pilihan kata asli user.` : 
@@ -677,6 +729,70 @@ const App = () => {
                       </button>
                     ))}
                   </div>
+                </div>
+
+                {/* PRESET GITAR AKUSTIK */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11pt] uppercase font-black text-purple-500 tracking-[0.2em] block">
+                      Preset Gitar Akustik
+                    </label>
+                    <span className="text-[10px] uppercase font-bold text-white/30 tracking-widest bg-white/5 px-2.5 py-1 rounded-full">
+                      Quick Styles
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {GUITAR_PRESETS.map((item) => {
+                      const isActive = genre === item.genre;
+                      return (
+                        <button
+                          type="button"
+                          key={item.genre}
+                          onClick={() => setGenre(item.genre)}
+                          className={`p-3.5 rounded-2xl border text-center transition-all flex flex-col justify-center items-center gap-1.5 ${
+                            isActive
+                              ? 'bg-purple-600/30 border-purple-500/80 text-white shadow-lg shadow-purple-950/40 font-bold'
+                              : 'bg-white/5 border-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                          }`}
+                        >
+                          <span className="text-xs uppercase tracking-wider font-extrabold text-center">
+                            {item.genre}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* PRESET CHARACTERISTICS CARD */}
+                  {(() => {
+                    const activePreset = GUITAR_PRESETS.find(p => p.genre === genre);
+                    if (!activePreset) return null;
+                    return (
+                      <motion.div 
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="p-5 rounded-2xl bg-purple-950/20 border border-purple-500/10 space-y-3"
+                      >
+                        <div>
+                          <span className="text-[9px] uppercase font-black tracking-widest text-purple-400 block mb-1">
+                            Karakteristik Preset: {activePreset.genre}
+                          </span>
+                          <p className="text-xs text-white/70 leading-relaxed font-sans">
+                            {activePreset.characteristics}
+                          </p>
+                        </div>
+                        <div className="pt-2 border-t border-purple-500/10">
+                          <span className="text-[9px] uppercase font-black tracking-widest text-indigo-400 block mb-1">
+                            Style tags (Combined):
+                          </span>
+                          <p className="text-[10px] text-white/50 leading-relaxed font-mono">
+                            {activePreset.styles}
+                          </p>
+                        </div>
+                      </motion.div>
+                    );
+                  })()}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
