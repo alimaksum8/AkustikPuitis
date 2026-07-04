@@ -30,6 +30,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 interface SongResult {
   judul: string;
   style_prompt_combined: string;
+  style_prompt_aimusic: string;
   style_prompt_suno: string;
   style_prompt_yolly: string;
   style_prompt_songgenerator: string;
@@ -181,6 +182,7 @@ const App = () => {
   });
   const [copiedLirik, setCopiedLirik] = useState(false);
   const [copiedProps, setCopiedProps] = useState(false);
+  const [copiedAimusic, setCopiedAimusic] = useState(false);
   const [copiedSuno, setCopiedSuno] = useState(false);
   const [copiedYolly, setCopiedYolly] = useState(false);
   const [copiedSonggenerator, setCopiedSonggenerator] = useState(false);
@@ -483,7 +485,7 @@ const App = () => {
     }
   };
 
-  const copyToClipboard = async (text: string, type: 'lirik' | 'props' | 'suno' | 'yolly' | 'songgenerator') => {
+  const copyToClipboard = async (text: string, type: 'lirik' | 'props' | 'aimusic' | 'suno' | 'yolly' | 'songgenerator') => {
     try {
       await navigator.clipboard.writeText(text);
       if (type === 'lirik') {
@@ -492,6 +494,9 @@ const App = () => {
       } else if (type === 'props') {
         setCopiedProps(true);
         setTimeout(() => setCopiedProps(false), 2000);
+      } else if (type === 'aimusic') {
+        setCopiedAimusic(true);
+        setTimeout(() => setCopiedAimusic(false), 2000);
       } else if (type === 'suno') {
         setCopiedSuno(true);
         setTimeout(() => setCopiedSuno(false), 2000);
@@ -517,6 +522,9 @@ const App = () => {
       } else if (type === 'props') {
         setCopiedProps(true);
         setTimeout(() => setCopiedProps(false), 2000);
+      } else if (type === 'aimusic') {
+        setCopiedAimusic(true);
+        setTimeout(() => setCopiedAimusic(false), 2000);
       } else if (type === 'suno') {
         setCopiedSuno(true);
         setTimeout(() => setCopiedSuno(false), 2000);
@@ -550,12 +558,13 @@ const App = () => {
     
     PANDUAN KHUSUS PRODUKSI:
     - TANPA NAMA TOKOH/ARTIS: DILARANG KERAS menyebutkan atau mencantumkan nama artis, nama penyanyi, nama pencipta lagu, atau nama orang nyata/tokoh siapapun di dalam judul, lirik, chord, ataupun catatan aransemen/mixing. Hasil lagu harus bersifat universal tanpa referensi nama tokoh/individu.
-    - TIGA STYLE PROMPT SPESIFIK UNTUK PLATFORM (SANGAT PENTING):
-      1. style_prompt_suno: Tulis style prompt bahasa Inggris yang sangat efisien dan padat untuk Suno AI. MAKSIMAL 110 KARAKTER (Sangat ketat, dilarang keras melebihi 110 karakter!). Harus berisi paduan genre, tempo, mood, instrumen, dan gaya vokal terpilih dalam koma-koma (e.g., "acoustic folk, slow 70 bpm, warm vocals, solo acoustic guitar, intimate").
-      2. style_prompt_yolly: Tulis style prompt bahasa Inggris yang sangat efisien dan padat untuk Yolly AI. MAKSIMAL 110 KARAKTER (Sangat ketat, dilarang keras melebihi 110 karakter!). Harus berisi paduan genre, tempo, mood, instrumen, dan gaya vokal terpilih dalam koma-koma.
-      3. style_prompt_songgenerator: Tulis style prompt bahasa Inggris yang sangat efisien dan padat untuk Songgenerator.io. MAKSIMAL 110 KARAKTER (Sangat ketat, dilarang keras melebihi 110 karakter!). Harus berisi paduan genre, tempo, mood, instrumen, dan gaya vokal terpilih dalam koma-koma.
-      - Jika Genre yang dipilih adalah "Fingerstyle Solo", ketiga field prompt di atas (suno, yolly, songgenerator) WAJIB murni berisi instruksi instrumental gitar akustik tunggal, fingerpicking, solo guitar, tanpa vokal ("no vocals, absolute instrumental, pure acoustic guitar, no drums, no lyrics") agar tidak memicu keluarnya vokal di Suno/Yolly/Songgenerator. Contoh: "pure instrumental, solo acoustic guitar, fingerstyle acoustic guitar, solo guitar, no vocals, absolute instrumental, clean acoustic guitar recording, organic acoustic, zero vocals, no drums, no bass, no synth, no piano, no percussion, fingerpicking solo, steel strings".
-      ${activePreset ? `- KHUSUS PRESET "${activePreset.genre}": Ketiga field di atas WAJIB mencantumkan beberapa style berikut agar sinkron dengan karakteristik preset: ${activePreset.styles}` : ''}
+    - EMPAT STYLE PROMPT SPESIFIK UNTUK PLATFORM (SANGAT PENTING):
+      1. style_prompt_aimusic: Tulis style prompt bahasa Inggris yang sangat efisien, padat, berupa rentetan tags dalam koma-koma untuk aimusic.so. MAKSIMAL 110 KARAKTER (Sangat ketat, dilarang keras melebihi 110 karakter!). Harus berisi paduan genre, tempo, mood, instrumen, dan gaya vokal terpilih (e.g., "acoustic folk, slow 70 bpm, warm vocals, solo acoustic guitar, intimate").
+      2. style_prompt_suno: Tulis style prompt bahasa Inggris yang sangat mendalam dan detail untuk Suno. MAKSIMAL 950 KARAKTER (Sangat ketat, dilarang keras melebihi 950 karakter!). Wajib mendeskripsikan secara sangat detail tentang vokal (vocals), suasana hati (mood), tempo, alat musik (instruments), dan bagaimana intro opening-nya dimulai.
+      3. style_prompt_yolly: Tulis style prompt bahasa Inggris yang sangat mendalam dan detail untuk Yolly AI. MAKSIMAL 950 KARAKTER (Sangat ketat, dilarang keras melebihi 950 karakter!). Wajib mendeskripsikan secara sangat detail tentang vokal (vocals), suasana hati (mood), tempo, alat musik (instruments), dan bagaimana intro opening-nya dimulai.
+      4. style_prompt_songgenerator: Tulis style prompt bahasa Inggris yang sangat mendalam dan detail untuk Songgenerator.io. MAKSIMAL 950 KARAKTER (Sangat ketat, dilarang keras melebihi 950 karakter!). Wajib mendeskripsikan secara sangat detail tentang vokal (vocals), suasana hati (mood), tempo, alat musik (instruments), dan bagaimana intro opening-nya dimulai.
+      - Jika Genre yang dipilih adalah "Fingerstyle Solo", keempat field prompt di atas (aimusic, suno, yolly, songgenerator) WAJIB murni berisi instruksi instrumental gitar akustik tunggal, fingerpicking, solo guitar, tanpa vokal ("no vocals, absolute instrumental, pure acoustic guitar, no drums, no lyrics") agar tidak memicu keluarnya vokal. Contoh: "pure instrumental, solo acoustic guitar, fingerstyle acoustic guitar, solo guitar, no vocals, absolute instrumental, clean acoustic guitar recording, organic acoustic, zero vocals, no drums, no bass, no synth, no piano, no percussion, fingerpicking solo, steel strings".
+      ${activePreset ? `- KHUSUS PRESET "${activePreset.genre}": Keempat field di atas WAJIB mencantumkan beberapa style berikut agar sinkron dengan karakteristik preset: ${activePreset.styles}` : ''}
     - LIRIK & STRUKTUR UNTUK FINGERSTYLE SOLO: jika Genre yang dipilih adalah "Fingerstyle Solo", lirik lagu dapat berupa gumaman/senandung lembut (seperti "hmmm", "oooh", "aaah") atau petunjuk teknik memetik gitar yang detail di setiap baris (misal: memetik bass Gadd9, tapping, harmonics) yang disusun mengalir indah, sehingga tidak mengundang AI eksternal untuk menyanyikan lirik vokal melodi yang ramai.
     - LIRIK: GAYA BAHASA HARUS SEDERHANA, mengalir indah, penuh makna, dan mudah dipahami. JANGAN menggunakan bahasa puitis yang rumit, metafora yang terlalu abstrak, atau diksi sastra kuno/berat yang sulit dimengerti. Gunakan bahasa sehari-hari yang tulus namun tetap menyentuh hati, serta memiliki PESAN atau AMANAT berharga yang jelas tersampaikan kepada pendengar.
     - DILARANG MENGGUNAKAN KATA KLISYÉ (SANGAT KETAT): SANGAT DILARANG keras menggunakan kata "kopi" (coffee), "senja" (sunset), "hujan" (rain), atau kata-kata klise musik indie sejenis lainnya di dalam lirik (kecuali jika kata tersebut secara spesifik ditulis langsung oleh user di deskripsi). Temukan diksi orisinal, tulus, kreatif, dan mendalam untuk menyampaikan ketenangan, kesendirian, atau suasana kafe tanpa menggunakan kata-kata klise tersebut.
@@ -606,6 +615,7 @@ const App = () => {
             properties: {
               judul: { type: Type.STRING },
               style_prompt_combined: { type: Type.STRING },
+              style_prompt_aimusic: { type: Type.STRING },
               style_prompt_suno: { type: Type.STRING },
               style_prompt_yolly: { type: Type.STRING },
               style_prompt_songgenerator: { type: Type.STRING },
@@ -617,6 +627,7 @@ const App = () => {
             required: [
               "judul", 
               "style_prompt_combined", 
+              "style_prompt_aimusic", 
               "style_prompt_suno", 
               "style_prompt_yolly", 
               "style_prompt_songgenerator", 
@@ -636,25 +647,31 @@ const App = () => {
         if (data.lirik) {
           data.lirik = data.lirik.slice(0, 5400);
         }
+        if (data.style_prompt_aimusic) {
+          data.style_prompt_aimusic = data.style_prompt_aimusic.slice(0, 110);
+        }
         if (data.style_prompt_suno) {
-          data.style_prompt_suno = data.style_prompt_suno.slice(0, 110);
+          data.style_prompt_suno = data.style_prompt_suno.slice(0, 950);
         }
         if (data.style_prompt_yolly) {
-          data.style_prompt_yolly = data.style_prompt_yolly.slice(0, 110);
+          data.style_prompt_yolly = data.style_prompt_yolly.slice(0, 950);
         }
         if (data.style_prompt_songgenerator) {
-          data.style_prompt_songgenerator = data.style_prompt_songgenerator.slice(0, 110);
+          data.style_prompt_songgenerator = data.style_prompt_songgenerator.slice(0, 950);
         }
         
         // Backwards compatibility fallback if any of the new fields are missing
+        if (!data.style_prompt_aimusic && data.style_prompt_combined) {
+          data.style_prompt_aimusic = data.style_prompt_combined.slice(0, 110);
+        }
         if (!data.style_prompt_suno && data.style_prompt_combined) {
-          data.style_prompt_suno = data.style_prompt_combined.slice(0, 110);
+          data.style_prompt_suno = data.style_prompt_combined.slice(0, 950);
         }
         if (!data.style_prompt_yolly && data.style_prompt_combined) {
-          data.style_prompt_yolly = data.style_prompt_combined.slice(0, 110);
+          data.style_prompt_yolly = data.style_prompt_combined.slice(0, 950);
         }
         if (!data.style_prompt_songgenerator && data.style_prompt_combined) {
-          data.style_prompt_songgenerator = data.style_prompt_combined.slice(0, 110);
+          data.style_prompt_songgenerator = data.style_prompt_combined.slice(0, 950);
         }
       }
 
@@ -990,24 +1007,48 @@ const App = () => {
                         <span className="text-[9px] uppercase bg-purple-500/10 text-purple-400 px-2.5 py-0.5 rounded-full font-bold">Optimized for Platforms</span>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        {/* AIMUSIC.SO */}
+                        <div className="bg-white/5 p-4 rounded-2xl border border-white/5 flex flex-col justify-between space-y-3 relative">
+                          <div>
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-[11px] font-black tracking-wider text-amber-400 uppercase">Aimusic.so</span>
+                              <span className={`text-[10px] font-mono ${(result.style_prompt_aimusic || '').length > 110 ? 'text-red-400' : 'text-white/40'}`}>
+                                {(result.style_prompt_aimusic || '').length}/110 Chars
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-white/50 mb-2 font-sans italic leading-tight">Max 110 characters, high-density tags</p>
+                            <pre className="text-xs text-purple-200/80 font-mono whitespace-pre-wrap bg-black/40 p-3 rounded-xl border border-white/5 h-[100px] overflow-y-auto custom-scrollbar">
+                              {result.style_prompt_aimusic || result.style_prompt_combined?.slice(0, 110)}
+                            </pre>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => copyToClipboard(result.style_prompt_aimusic || result.style_prompt_combined?.slice(0, 110), 'aimusic')}
+                            className="w-full py-2 bg-purple-600/30 hover:bg-purple-600 text-white rounded-xl transition-all text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
+                          >
+                            {copiedAimusic ? <Check size={12} /> : <Copy size={12} />}
+                            {copiedAimusic ? 'Copied' : 'Copy for Aimusic'}
+                          </button>
+                        </div>
+
                         {/* SUNO AI */}
                         <div className="bg-white/5 p-4 rounded-2xl border border-white/5 flex flex-col justify-between space-y-3 relative">
                           <div>
                             <div className="flex justify-between items-center mb-1">
                               <span className="text-[11px] font-black tracking-wider text-pink-400 uppercase">Suno AI</span>
-                              <span className={`text-[10px] font-mono ${(result.style_prompt_suno || '').length > 110 ? 'text-red-400' : 'text-white/40'}`}>
-                                {(result.style_prompt_suno || '').length}/110 Chars
+                              <span className={`text-[10px] font-mono ${(result.style_prompt_suno || '').length > 950 ? 'text-red-400' : 'text-white/40'}`}>
+                                {(result.style_prompt_suno || '').length}/950 Chars
                               </span>
                             </div>
-                            <p className="text-[11px] text-white/50 mb-2 font-sans italic leading-tight">Max 110 characters, high-density tags</p>
+                            <p className="text-[11px] text-white/50 mb-2 font-sans italic leading-tight">Max 950 characters, deep details</p>
                             <pre className="text-xs text-purple-200/80 font-mono whitespace-pre-wrap bg-black/40 p-3 rounded-xl border border-white/5 h-[100px] overflow-y-auto custom-scrollbar">
-                              {result.style_prompt_suno || result.style_prompt_combined?.slice(0, 110)}
+                              {result.style_prompt_suno || result.style_prompt_combined}
                             </pre>
                           </div>
                           <button
                             type="button"
-                            onClick={() => copyToClipboard(result.style_prompt_suno || result.style_prompt_combined?.slice(0, 110), 'suno')}
+                            onClick={() => copyToClipboard(result.style_prompt_suno || result.style_prompt_combined, 'suno')}
                             className="w-full py-2 bg-purple-600/30 hover:bg-purple-600 text-white rounded-xl transition-all text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
                           >
                             {copiedSuno ? <Check size={12} /> : <Copy size={12} />}
@@ -1020,18 +1061,18 @@ const App = () => {
                           <div>
                             <div className="flex justify-between items-center mb-1">
                               <span className="text-[11px] font-black tracking-wider text-indigo-400 uppercase">Yolly AI</span>
-                              <span className={`text-[10px] font-mono ${(result.style_prompt_yolly || '').length > 110 ? 'text-red-400' : 'text-white/40'}`}>
-                                {(result.style_prompt_yolly || '').length}/110 Chars
+                              <span className={`text-[10px] font-mono ${(result.style_prompt_yolly || '').length > 950 ? 'text-red-400' : 'text-white/40'}`}>
+                                {(result.style_prompt_yolly || '').length}/950 Chars
                               </span>
                             </div>
-                            <p className="text-[11px] text-white/50 mb-2 font-sans italic leading-tight">Max 110 characters, high-density tags</p>
+                            <p className="text-[11px] text-white/50 mb-2 font-sans italic leading-tight">Max 950 characters, deep details</p>
                             <pre className="text-xs text-purple-200/80 font-mono whitespace-pre-wrap bg-black/40 p-3 rounded-xl border border-white/5 h-[100px] overflow-y-auto custom-scrollbar">
-                              {result.style_prompt_yolly || result.style_prompt_combined?.slice(0, 110)}
+                              {result.style_prompt_yolly || result.style_prompt_combined}
                             </pre>
                           </div>
                           <button
                             type="button"
-                            onClick={() => copyToClipboard(result.style_prompt_yolly || result.style_prompt_combined?.slice(0, 110), 'yolly')}
+                            onClick={() => copyToClipboard(result.style_prompt_yolly || result.style_prompt_combined, 'yolly')}
                             className="w-full py-2 bg-purple-600/30 hover:bg-purple-600 text-white rounded-xl transition-all text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
                           >
                             {copiedYolly ? <Check size={12} /> : <Copy size={12} />}
@@ -1044,18 +1085,18 @@ const App = () => {
                           <div>
                             <div className="flex justify-between items-center mb-1">
                               <span className="text-[11px] font-black tracking-wider text-teal-400 uppercase">Songgenerator.io</span>
-                              <span className={`text-[10px] font-mono ${(result.style_prompt_songgenerator || '').length > 110 ? 'text-red-400' : 'text-white/40'}`}>
-                                {(result.style_prompt_songgenerator || '').length}/110 Chars
+                              <span className={`text-[10px] font-mono ${(result.style_prompt_songgenerator || '').length > 950 ? 'text-red-400' : 'text-white/40'}`}>
+                                {(result.style_prompt_songgenerator || '').length}/950 Chars
                               </span>
                             </div>
-                            <p className="text-[11px] text-white/50 mb-2 font-sans italic leading-tight">Max 110 characters, high-density tags</p>
+                            <p className="text-[11px] text-white/50 mb-2 font-sans italic leading-tight">Max 950 characters, deep details</p>
                             <pre className="text-xs text-purple-200/80 font-mono whitespace-pre-wrap bg-black/40 p-3 rounded-xl border border-white/5 h-[100px] overflow-y-auto custom-scrollbar">
-                              {result.style_prompt_songgenerator || result.style_prompt_combined?.slice(0, 110)}
+                              {result.style_prompt_songgenerator || result.style_prompt_combined}
                             </pre>
                           </div>
                           <button
                             type="button"
-                            onClick={() => copyToClipboard(result.style_prompt_songgenerator || result.style_prompt_combined?.slice(0, 110), 'songgenerator')}
+                            onClick={() => copyToClipboard(result.style_prompt_songgenerator || result.style_prompt_combined, 'songgenerator')}
                             className="w-full py-2 bg-purple-600/30 hover:bg-purple-600 text-white rounded-xl transition-all text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
                           >
                             {copiedSonggenerator ? <Check size={12} /> : <Copy size={12} />}
